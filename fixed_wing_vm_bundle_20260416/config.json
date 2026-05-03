@@ -1,0 +1,118 @@
+{
+  "experiment_name": "runway_unet_baseline",
+  "paths": {
+    "data_root": "data/prepared",
+    "metadata_root": "data/metadata",
+    "output_root": "outputs"
+  },
+  "data": {
+    "image_size": [
+      1024,
+      448
+    ],
+    "train_batch_size": 4,
+    "val_batch_size": 2,
+    "num_workers": 0,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "augmentation": {
+    "enabled": true,
+    "backend": "albumentations_v1",
+    "brightness": 0.12,
+    "contrast": 0.12,
+    "blur_prob": 0.2,
+    "blur_radius_max": 1.0,
+    "crop_scale_min": 0.92,
+    "affine_prob": 0.6,
+    "affine_scale": [
+      0.97,
+      1.03
+    ],
+    "affine_translate_percent": [
+      -0.03,
+      0.03
+    ],
+    "affine_rotate": [
+      -2.0,
+      2.0
+    ],
+    "perspective_prob": 0.2,
+    "perspective_scale": [
+      0.02,
+      0.05
+    ],
+    "brightness_contrast_prob": 0.5,
+    "brightness_limit": 0.12,
+    "contrast_limit": 0.12,
+    "gamma_prob": 0.3,
+    "gamma_limit": [
+      90,
+      110
+    ],
+    "noise_prob": 0.2,
+    "noise_std_range": [
+      0.01,
+      0.03
+    ],
+    "compression_prob": 0.2,
+    "compression_quality_range": [
+      70,
+      95
+    ]
+  },
+  "all_data": {
+    "split_prefix": "all_data",
+    "monitor_ratio": 0.15,
+    "min_monitor_samples_per_dataset": 4,
+    "monitor_position": "tail"
+  },
+  "model": {
+    "base_channels": 32,
+    "dropout": 0.1,
+    "norm_type": "groupnorm",
+    "group_norm_groups": 8
+  },
+  "train": {
+    "epochs": 20,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "bce_weight": 0.5,
+    "dice_weight": 0.5,
+    "bce_pos_weight_mode": "auto",
+    "bce_pos_weight_value": 1.0,
+    "bce_pos_weight_clamp": [
+      1.0,
+      6.0
+    ],
+    "threshold": 0.5,
+    "seed": 42,
+    "use_amp": true,
+    "gradient_clip_norm": 1.0,
+    "scheduler": {
+      "enabled": true,
+      "name": "cosine",
+      "t_max": 20,
+      "eta_min": 1e-06
+    },
+    "early_stopping": {
+      "enabled": true,
+      "min_epochs": 8,
+      "patience": 5,
+      "min_delta": 0.0005
+    }
+  },
+  "predict": {
+    "threshold": 0.5,
+    "gif_frame_duration_ms": 120,
+    "representative_frames": 6
+  }
+}

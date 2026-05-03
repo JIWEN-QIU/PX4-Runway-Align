@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <arg name="gazebo_gui" default="true"/>
+
+    <!-- Kill any existing gazebo processes -->
+    <node pkg="px4" type="gazebo-classic-kill.sh" name="gazebo_kill" output="screen"/>
+
+    <!-- Start gazebo server with grass_runway_3m world -->
+    <node pkg="gazebo_ros" type="gzserver" name="gzserver" args="--verbose $(find px4)/Tools/simulation/gazebo-classic/sitl_gazebo-classic/worlds/grass_runway_3m.world" output="screen">
+        <env name="GAZEBO_PLUGIN_PATH" value="$(find px4)/build/px4_sitl_default/build_gazebo-classic"/>
+        <env name="GAZEBO_MODEL_PATH" value="$(find px4)/Tools/simulation/gazebo-classic/sitl_gazebo-classic/models"/>
+    </node>
+
+    <!-- Start gazebo client (GUI) if enabled -->
+    <node if="$(arg gazebo_gui)" pkg="gazebo_ros" type="gzclient" name="gzclient" respawn="false" output="screen"/>
+</launch>

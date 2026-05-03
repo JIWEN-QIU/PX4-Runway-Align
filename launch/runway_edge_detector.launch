@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="image_topic" default="/front_camera/image_raw"/>
+    <arg name="roi_top_ratio" default="0.0"/>
+    <arg name="roi_bottom_ratio" default="0.5"/>
+    <arg name="center_exclusion_half_width_ratio" default="0.0"/>
+    <arg name="trapezoid_top_y_ratio" default="0.35"/>
+    <arg name="side_band_top_inner_ratio" default="0.42"/>
+    <arg name="side_band_bottom_inner_ratio" default="0.28"/>
+    <arg name="use_side_band_mask" default="false"/>
+    <arg name="white_threshold" default="185"/>
+    <arg name="white_hsv_s_max" default="60"/>
+    <arg name="white_hsv_v_min" default="170"/>
+    <arg name="white_lab_l_min" default="170"/>
+    <arg name="white_lab_ab_dev_max" default="20"/>
+    <arg name="use_edge_map" default="false"/>
+    <arg name="white_scan_min_pixels" default="6"/>
+    <arg name="white_scan_row_step" default="8"/>
+    <arg name="canny_low" default="50"/>
+    <arg name="canny_high" default="150"/>
+    <arg name="publish_debug_mask" default="true"/>
+
+    <node pkg="px4" type="runway_edge_detector.py" name="runway_edge_detector" output="screen">
+        <param name="image_topic" value="$(arg image_topic)"/>
+        <param name="roi_top_ratio" value="$(arg roi_top_ratio)"/>
+        <param name="roi_bottom_ratio" value="$(arg roi_bottom_ratio)"/>
+        <param name="center_exclusion_half_width_ratio" value="$(arg center_exclusion_half_width_ratio)"/>
+        <param name="trapezoid_top_y_ratio" value="$(arg trapezoid_top_y_ratio)"/>
+        <param name="side_band_top_inner_ratio" value="$(arg side_band_top_inner_ratio)"/>
+        <param name="side_band_bottom_inner_ratio" value="$(arg side_band_bottom_inner_ratio)"/>
+        <param name="use_side_band_mask" value="$(arg use_side_band_mask)"/>
+        <param name="white_threshold" value="$(arg white_threshold)"/>
+        <param name="white_hsv_s_max" value="$(arg white_hsv_s_max)"/>
+        <param name="white_hsv_v_min" value="$(arg white_hsv_v_min)"/>
+        <param name="white_lab_l_min" value="$(arg white_lab_l_min)"/>
+        <param name="white_lab_ab_dev_max" value="$(arg white_lab_ab_dev_max)"/>
+        <param name="use_edge_map" value="$(arg use_edge_map)"/>
+        <param name="white_scan_min_pixels" value="$(arg white_scan_min_pixels)"/>
+        <param name="white_scan_row_step" value="$(arg white_scan_row_step)"/>
+        <param name="canny_low" value="$(arg canny_low)"/>
+        <param name="canny_high" value="$(arg canny_high)"/>
+        <param name="publish_debug_mask" value="$(arg publish_debug_mask)"/>
+    </node>
+</launch>

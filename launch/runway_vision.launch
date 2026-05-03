@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="image_topic" default="/front_camera/image_raw"/>
+    <arg name="checkpoint" default="$(find px4)/fixed_wing_vm_bundle_20260416/outputs/runway_unet_baseline/all_data/20260416_005032/checkpoints/best.pt"/>
+    <arg name="config" default="$(find px4)/fixed_wing_vm_bundle_20260416/config.json"/>
+    <arg name="device" default="cuda"/>
+    <arg name="publish_overlay" default="true"/>
+    <arg name="publish_mask" default="true"/>
+    <arg name="max_fps" default="15"/>
+    <arg name="mask_cleaning" default="bottom_anchor"/>
+    <arg name="mask_anchor_row_ratio" default="0.65"/>
+    <arg name="mask_bottom_row_ratio" default="0.98"/>
+    <arg name="temporal_smoothing" default="true"/>
+    <arg name="control_row_ratio" default="0.82"/>
+    <arg name="search_radius" default="16"/>
+    <arg name="prefer_observed_span_for_lateral" default="true"/>
+
+    <node pkg="px4" type="runway_vision_node.py" name="runway_vision" output="screen">
+        <param name="image_topic" value="$(arg image_topic)"/>
+        <param name="checkpoint" value="$(arg checkpoint)"/>
+        <param name="config" value="$(arg config)"/>
+        <param name="device" value="$(arg device)"/>
+        <param name="publish_overlay" value="$(arg publish_overlay)"/>
+        <param name="publish_mask" value="$(arg publish_mask)"/>
+        <param name="max_fps" value="$(arg max_fps)"/>
+        <param name="mask_cleaning" value="$(arg mask_cleaning)"/>
+        <param name="mask_anchor_row_ratio" value="$(arg mask_anchor_row_ratio)"/>
+        <param name="mask_bottom_row_ratio" value="$(arg mask_bottom_row_ratio)"/>
+        <param name="temporal_smoothing" value="$(arg temporal_smoothing)"/>
+        <param name="control_row_ratio" value="$(arg control_row_ratio)"/>
+        <param name="search_radius" value="$(arg search_radius)"/>
+        <param name="prefer_observed_span_for_lateral" value="$(arg prefer_observed_span_for_lateral)"/>
+    </node>
+</launch>

@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="dry_run" default="true"/>
+    <arg name="device" default="cpu"/>
+    <arg name="vision_max_fps" default="10"/>
+    <arg name="mask_cleaning" default="bottom_anchor"/>
+    <arg name="mask_anchor_row_ratio" default="0.65"/>
+    <arg name="mask_bottom_row_ratio" default="0.98"/>
+    <arg name="temporal_smoothing" default="false"/>
+    <arg name="control_row_ratio" default="0.82"/>
+    <arg name="search_radius" default="16"/>
+    <arg name="prefer_observed_span_for_lateral" default="true"/>
+    <arg name="heading_sign" default="1.0"/>
+    <arg name="lateral_sign" default="1.0"/>
+    <arg name="k_heading" default="0.04"/>
+    <arg name="k_lateral" default="0.35"/>
+    <arg name="k_lateral_i" default="0.0"/>
+    <arg name="max_heading_error_deg" default="10.0"/>
+    <arg name="max_lateral_error" default="1.0"/>
+    <arg name="lateral_integral_limit" default="0.25"/>
+    <arg name="lateral_integral_leak" default="0.95"/>
+    <arg name="integral_heading_gate_deg" default="12.0"/>
+    <arg name="integral_zone_lateral_error" default="0.35"/>
+    <arg name="conf_min" default="0.45"/>
+    <arg name="low_conf_scale" default="0.5"/>
+    <arg name="max_steer" default="0.35"/>
+    <arg name="filter_alpha" default="0.65"/>
+    <arg name="max_delta" default="0.08"/>
+    <arg name="heading_deadband_deg" default="0.0"/>
+    <arg name="lateral_deadband" default="0.05"/>
+    <arg name="lateral_target_offset" default="0.0"/>
+    <arg name="command_scale" default="1.0"/>
+    <arg name="min_effective_steer" default="0.06"/>
+    <arg name="center_hold_heading_deg" default="4.0"/>
+    <arg name="center_hold_lateral_error" default="0.10"/>
+    <arg name="near_center_command_scale" default="0.35"/>
+    <arg name="min_effective_heading_gate_deg" default="8.0"/>
+    <arg name="min_effective_lateral_gate" default="0.20"/>
+    <arg name="center_release_heading_deg" default="7.0"/>
+    <arg name="center_release_lateral_error" default="0.16"/>
+    <arg name="center_hold_zero_cmd" default="false"/>
+    <arg name="straight_hold_heading_deg" default="2.0"/>
+    <arg name="straight_hold_lateral_error" default="0.06"/>
+    <arg name="straight_release_heading_deg" default="3.5"/>
+    <arg name="straight_release_lateral_error" default="0.08"/>
+    <arg name="straight_hold_require_startup_boost_inactive" default="true"/>
+    <arg name="straight_hold_require_center_hold" default="false"/>
+    <arg name="straight_hold_lateral_priority" default="true"/>
+    <arg name="straight_hold_heading_keep_scale" default="0.35"/>
+    <arg name="straight_hold_heading_keep_max" default="0.08"/>
+    <arg name="straight_hold_heading_deadband_deg" default="0.0"/>
+    <arg name="straight_hold_allow_during_startup_near_center" default="false"/>
+    <arg name="straight_hold_startup_heading_deg" default="12.0"/>
+    <arg name="straight_hold_startup_lateral_error" default="$(arg straight_hold_lateral_error)"/>
+    <arg name="straight_hold_startup_lateral_sources" default=""/>
+    <arg name="sign_flip_heading_gate_deg" default="5.0"/>
+    <arg name="sign_flip_lateral_gate" default="0.08"/>
+    <arg name="far_lateral_error" default="0.30"/>
+    <arg name="far_lateral_gain_scale" default="1.35"/>
+    <arg name="near_heading_error_deg" default="8.0"/>
+    <arg name="near_heading_gain_scale" default="0.30"/>
+    <arg name="startup_lateral_error" default="0.12"/>
+    <arg name="startup_lateral_gain_scale" default="1.45"/>
+    <arg name="startup_heading_gain_scale" default="0.45"/>
+    <arg name="large_error_lateral_threshold" default="$(arg startup_lateral_error)"/>
+    <arg name="large_error_lateral_gain_scale" default="$(arg startup_lateral_gain_scale)"/>
+    <arg name="large_error_heading_gain_scale" default="$(arg startup_heading_gain_scale)"/>
+    <arg name="convergence_protect_lateral_threshold" default="$(arg large_error_lateral_threshold)"/>
+    <arg name="convergence_opposing_heading_ratio" default="0.5"/>
+    <arg name="convergence_opposing_heading_ratio_strong" default="0.25"/>
+    <arg name="convergence_strong_lateral_threshold" default="$(arg far_lateral_error)"/>
+    <arg name="heading_priority_heading_deg" default="45.0"/>
+    <arg name="heading_priority_lateral_ratio" default="0.5"/>
+    <arg name="heading_priority_untrusted_lateral_sources" default=""/>
+    <arg name="heading_priority_untrusted_lateral_ratio" default="$(arg heading_priority_lateral_ratio)"/>
+    <arg name="heading_priority_untrusted_min_lateral_error" default="$(arg far_lateral_error)"/>
+    <arg name="vision_timeout_sec" default="2.0"/>
+    <arg name="control_rate_hz" default="20.0"/>
+    <arg name="enable_closed_loop_monitor" default="false"/>
+    <arg name="monitor_rate_hz" default="5.0"/>
+    <arg name="monitor_stale_timeout_sec" default="1.0"/>
+    <arg name="command_topic" default="/runway_ground_align_controller/vehicle_steer_cmd"/>
+    <arg name="enable_rc_override" default="false"/>
+    <arg name="actuator_mode" default="manual_control"/>
+    <arg name="manual_control_topic" default="/mavros/manual_control/send"/>
+    <arg name="manual_axis" default="r"/>
+    <arg name="manual_scale" default="1000.0"/>
+    <arg name="manual_x" default="0.0"/>
+    <arg name="manual_y" default="0.0"/>
+    <arg name="manual_z" default="0.0"/>
+    <arg name="manual_r" default="0.0"/>
+    <arg name="rc_override_topic" default="/mavros/rc/override"/>
+    <arg name="steer_channel" default="1"/>
+    <arg name="steer_reverse" default="false"/>
+    <arg name="steer_pwm_center" default="1500"/>
+    <arg name="steer_pwm_range" default="400"/>
+    <arg name="steer_pwm_min" default="1100"/>
+    <arg name="steer_pwm_max" default="1900"/>
+    <arg name="rc_command_timeout_sec" default="0.5"/>
+    <arg name="enable_ground_motion_assist" default="false"/>
+    <arg name="ground_assist_model_name" default="plane"/>
+    <arg name="ground_assist_max_speed_mps" default="0.9"/>
+    <arg name="ground_assist_speed_override_mps" default="-1.0"/>
+    <arg name="ground_assist_min_throttle" default="40.0"/>
+    <arg name="ground_assist_max_yaw_rate_deg_s" default="15.0"/>
+    <arg name="ground_assist_steer_sign" default="1.0"/>
+    <arg name="ground_assist_steer_override" default="nan"/>
+    <arg name="ground_assist_enable_startup_steer_boost" default="false"/>
+    <arg name="ground_assist_startup_boost_heading_deg" default="5.0"/>
+    <arg name="ground_assist_startup_boost_lateral_error" default="0.12"/>
+    <arg name="ground_assist_startup_boost_release_heading_deg" default="2.5"/>
+    <arg name="ground_assist_startup_boost_release_lateral_error" default="0.05"/>
+    <arg name="ground_assist_startup_boost_gain" default="1.10"/>
+    <arg name="ground_assist_startup_boost_max_steer" default="0.75"/>
+    <arg name="ground_assist_startup_boost_one_shot" default="true"/>
+    <arg name="ground_assist_enable_align_hold" default="false"/>
+    <arg name="ground_assist_align_hold_heading_deg" default="6.0"/>
+    <arg name="ground_assist_align_hold_lateral_error" default="0.18"/>
+    <arg name="ground_assist_align_release_heading_deg" default="3.0"/>
+    <arg name="ground_assist_align_release_lateral_error" default="0.08"/>
+    <arg name="ground_assist_align_min_speed_scale" default="0.15"/>
+
+    <include file="$(find px4)/launch/runway_vision.launch">
+        <arg name="device" value="$(arg device)"/>
+        <arg name="max_fps" value="$(arg vision_max_fps)"/>
+        <arg name="mask_cleaning" value="$(arg mask_cleaning)"/>
+        <arg name="mask_anchor_row_ratio" value="$(arg mask_anchor_row_ratio)"/>
+        <arg name="mask_bottom_row_ratio" value="$(arg mask_bottom_row_ratio)"/>
+        <arg name="temporal_smoothing" value="$(arg temporal_smoothing)"/>
+        <arg name="control_row_ratio" value="$(arg control_row_ratio)"/>
+        <arg name="search_radius" value="$(arg search_radius)"/>
+        <arg name="prefer_observed_span_for_lateral" value="$(arg prefer_observed_span_for_lateral)"/>
+    </include>
+
+    <node pkg="px4" type="runway_ground_align_controller.py" name="runway_ground_align_controller" output="screen">
+        <param name="dry_run" value="$(arg dry_run)"/>
+        <param name="heading_sign" value="$(arg heading_sign)"/>
+        <param name="lateral_sign" value="$(arg lateral_sign)"/>
+        <param name="k_heading" value="$(arg k_heading)"/>
+        <param name="k_lateral" value="$(arg k_lateral)"/>
+        <param name="k_lateral_i" value="$(arg k_lateral_i)"/>
+        <param name="max_heading_error_deg" value="$(arg max_heading_error_deg)"/>
+        <param name="max_lateral_error" value="$(arg max_lateral_error)"/>
+        <param name="lateral_integral_limit" value="$(arg lateral_integral_limit)"/>
+        <param name="lateral_integral_leak" value="$(arg lateral_integral_leak)"/>
+        <param name="integral_heading_gate_deg" value="$(arg integral_heading_gate_deg)"/>
+        <param name="integral_zone_lateral_error" value="$(arg integral_zone_lateral_error)"/>
+        <param name="conf_min" value="$(arg conf_min)"/>
+        <param name="low_conf_scale" value="$(arg low_conf_scale)"/>
+        <param name="max_steer" value="$(arg max_steer)"/>
+        <param name="filter_alpha" value="$(arg filter_alpha)"/>
+        <param name="max_delta" value="$(arg max_delta)"/>
+        <param name="heading_deadband_deg" value="$(arg heading_deadband_deg)"/>
+        <param name="lateral_deadband" value="$(arg lateral_deadband)"/>
+        <param name="lateral_target_offset" value="$(arg lateral_target_offset)"/>
+        <param name="command_scale" value="$(arg command_scale)"/>
+        <param name="min_effective_steer" value="$(arg min_effective_steer)"/>
+        <param name="center_hold_heading_deg" value="$(arg center_hold_heading_deg)"/>
+        <param name="center_hold_lateral_error" value="$(arg center_hold_lateral_error)"/>
+        <param name="near_center_command_scale" value="$(arg near_center_command_scale)"/>
+        <param name="min_effective_heading_gate_deg" value="$(arg min_effective_heading_gate_deg)"/>
+        <param name="min_effective_lateral_gate" value="$(arg min_effective_lateral_gate)"/>
+        <param name="center_release_heading_deg" value="$(arg center_release_heading_deg)"/>
+        <param name="center_release_lateral_error" value="$(arg center_release_lateral_error)"/>
+        <param name="center_hold_zero_cmd" value="$(arg center_hold_zero_cmd)"/>
+        <param name="straight_hold_heading_deg" value="$(arg straight_hold_heading_deg)"/>
+        <param name="straight_hold_lateral_error" value="$(arg straight_hold_lateral_error)"/>
+        <param name="straight_release_heading_deg" value="$(arg straight_release_heading_deg)"/>
+        <param name="straight_release_lateral_error" value="$(arg straight_release_lateral_error)"/>
+        <param name="straight_hold_require_startup_boost_inactive" value="$(arg straight_hold_require_startup_boost_inactive)"/>
+        <param name="straight_hold_require_center_hold" value="$(arg straight_hold_require_center_hold)"/>
+        <param name="straight_hold_lateral_priority" value="$(arg straight_hold_lateral_priority)"/>
+        <param name="straight_hold_heading_keep_scale" value="$(arg straight_hold_heading_keep_scale)"/>
+        <param name="straight_hold_heading_keep_max" value="$(arg straight_hold_heading_keep_max)"/>
+        <param name="straight_hold_heading_deadband_deg" value="$(arg straight_hold_heading_deadband_deg)"/>
+        <param name="straight_hold_allow_during_startup_near_center" value="$(arg straight_hold_allow_during_startup_near_center)"/>
+        <param name="straight_hold_startup_heading_deg" value="$(arg straight_hold_startup_heading_deg)"/>
+        <param name="straight_hold_startup_lateral_error" value="$(arg straight_hold_startup_lateral_error)"/>
+        <param name="straight_hold_startup_lateral_sources" value="$(arg straight_hold_startup_lateral_sources)"/>
+        <param name="sign_flip_heading_gate_deg" value="$(arg sign_flip_heading_gate_deg)"/>
+        <param name="sign_flip_lateral_gate" value="$(arg sign_flip_lateral_gate)"/>
+        <param name="far_lateral_error" value="$(arg far_lateral_error)"/>
+        <param name="far_lateral_gain_scale" value="$(arg far_lateral_gain_scale)"/>
+        <param name="near_heading_error_deg" value="$(arg near_heading_error_deg)"/>
+        <param name="near_heading_gain_scale" value="$(arg near_heading_gain_scale)"/>
+        <param name="large_error_lateral_threshold" value="$(arg large_error_lateral_threshold)"/>
+        <param name="large_error_lateral_gain_scale" value="$(arg large_error_lateral_gain_scale)"/>
+        <param name="large_error_heading_gain_scale" value="$(arg large_error_heading_gain_scale)"/>
+        <param name="convergence_protect_lateral_threshold" value="$(arg convergence_protect_lateral_threshold)"/>
+        <param name="convergence_opposing_heading_ratio" value="$(arg convergence_opposing_heading_ratio)"/>
+        <param name="convergence_opposing_heading_ratio_strong" value="$(arg convergence_opposing_heading_ratio_strong)"/>
+        <param name="convergence_strong_lateral_threshold" value="$(arg convergence_strong_lateral_threshold)"/>
+        <param name="heading_priority_heading_deg" value="$(arg heading_priority_heading_deg)"/>
+        <param name="heading_priority_lateral_ratio" value="$(arg heading_priority_lateral_ratio)"/>
+        <param name="heading_priority_untrusted_lateral_sources" value="$(arg heading_priority_untrusted_lateral_sources)"/>
+        <param name="heading_priority_untrusted_lateral_ratio" value="$(arg heading_priority_untrusted_lateral_ratio)"/>
+        <param name="heading_priority_untrusted_min_lateral_error" value="$(arg heading_priority_untrusted_min_lateral_error)"/>
+        <param name="vision_timeout_sec" value="$(arg vision_timeout_sec)"/>
+        <param name="control_rate_hz" value="$(arg control_rate_hz)"/>
+        <param name="command_topic" value="$(arg command_topic)"/>
+    </node>
+
+    <node if="$(arg enable_rc_override)" pkg="px4" type="runway_rc_override_bridge.py" name="runway_rc_override_bridge" output="screen">
+        <param name="input_topic" value="/runway_ground_align_controller/steer_cmd"/>
+        <param name="mode" value="$(arg actuator_mode)"/>
+        <param name="manual_control_topic" value="$(arg manual_control_topic)"/>
+        <param name="rc_override_topic" value="$(arg rc_override_topic)"/>
+        <param name="rate_hz" value="$(arg control_rate_hz)"/>
+        <param name="command_timeout_sec" value="$(arg rc_command_timeout_sec)"/>
+        <param name="manual_axis" value="$(arg manual_axis)"/>
+        <param name="manual_scale" value="$(arg manual_scale)"/>
+        <param name="manual_x" value="$(arg manual_x)"/>
+        <param name="manual_y" value="$(arg manual_y)"/>
+        <param name="manual_z" value="$(arg manual_z)"/>
+        <param name="manual_r" value="$(arg manual_r)"/>
+        <param name="steer_channel" value="$(arg steer_channel)"/>
+        <param name="reverse" value="$(arg steer_reverse)"/>
+        <param name="pwm_center" value="$(arg steer_pwm_center)"/>
+        <param name="pwm_range" value="$(arg steer_pwm_range)"/>
+        <param name="pwm_min" value="$(arg steer_pwm_min)"/>
+        <param name="pwm_max" value="$(arg steer_pwm_max)"/>
+    </node>
+
+    <node if="$(arg enable_ground_motion_assist)" pkg="px4" type="runway_ground_motion_assist.py" name="runway_ground_motion_assist" output="screen">
+        <param name="model_name" value="$(arg ground_assist_model_name)"/>
+        <param name="steer_topic" value="/runway_ground_align_controller/steer_cmd"/>
+        <param name="manual_topic" value="$(arg manual_control_topic)"/>
+        <param name="rate_hz" value="$(arg control_rate_hz)"/>
+        <param name="max_speed_mps" value="$(arg ground_assist_max_speed_mps)"/>
+        <param name="speed_override_mps" value="$(arg ground_assist_speed_override_mps)"/>
+        <param name="min_throttle" value="$(arg ground_assist_min_throttle)"/>
+        <param name="max_yaw_rate_deg_s" value="$(arg ground_assist_max_yaw_rate_deg_s)"/>
+        <param name="steer_sign" value="$(arg ground_assist_steer_sign)"/>
+        <param name="steer_override" value="$(arg ground_assist_steer_override)"/>
+        <param name="enable_startup_steer_boost" value="$(arg ground_assist_enable_startup_steer_boost)"/>
+        <param name="startup_boost_heading_deg" value="$(arg ground_assist_startup_boost_heading_deg)"/>
+        <param name="startup_boost_lateral_error" value="$(arg ground_assist_startup_boost_lateral_error)"/>
+        <param name="startup_boost_release_heading_deg" value="$(arg ground_assist_startup_boost_release_heading_deg)"/>
+        <param name="startup_boost_release_lateral_error" value="$(arg ground_assist_startup_boost_release_lateral_error)"/>
+        <param name="startup_boost_gain" value="$(arg ground_assist_startup_boost_gain)"/>
+        <param name="startup_boost_max_steer" value="$(arg ground_assist_startup_boost_max_steer)"/>
+        <param name="startup_boost_one_shot" value="$(arg ground_assist_startup_boost_one_shot)"/>
+        <param name="enable_align_hold" value="$(arg ground_assist_enable_align_hold)"/>
+        <param name="align_hold_heading_deg" value="$(arg ground_assist_align_hold_heading_deg)"/>
+        <param name="align_hold_lateral_error" value="$(arg ground_assist_align_hold_lateral_error)"/>
+        <param name="align_release_heading_deg" value="$(arg ground_assist_align_release_heading_deg)"/>
+        <param name="align_release_lateral_error" value="$(arg ground_assist_align_release_lateral_error)"/>
+        <param name="align_min_speed_scale" value="$(arg ground_assist_align_min_speed_scale)"/>
+        <param name="command_timeout_sec" value="$(arg rc_command_timeout_sec)"/>
+        <param name="hold_z" value="true"/>
+    </node>
+
+    <node if="$(arg enable_closed_loop_monitor)" pkg="px4" type="runway_closed_loop_monitor.py" name="runway_closed_loop_monitor" output="screen">
+        <param name="rate_hz" value="$(arg monitor_rate_hz)"/>
+        <param name="stale_timeout_sec" value="$(arg monitor_stale_timeout_sec)"/>
+    </node>
+</launch>
